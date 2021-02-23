@@ -1,0 +1,11 @@
+{
+    "autodeskProduct": "Fusion360",
+    "type": "addin",
+    "id": "c980c574-998f-4e59-b46f-8e69ab18a846",
+    "author": "Patrick Rainsberry",
+    "description": "Demo app showing communication between a standalone QT Application and a Fusion 360 Add-in",
+    "version": "0.1.0",
+    "runOnStartup": false,
+    "supportedOS": "windows|mac",
+    "editEnabled": true
+}
