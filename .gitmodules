@@ -1,0 +1,3 @@
+[submodule "FusionQTer/apper"]
+	path = FusionQTer/apper
+	url = https://github.com/tapnair/apper

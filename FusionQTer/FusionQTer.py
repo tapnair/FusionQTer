@@ -9,31 +9,45 @@ try:
 
     # ************Samples**************
     # Basic Fusion 360 Command Base samples
-    from .commands.SampleCommand1 import SampleCommand1
+    from .commands.LaunchQTAppCommand import LaunchQTAppCommand, LaunchReceiverCommand
     from .commands.SampleCommand2 import SampleCommand2
 
     # Palette Command Base samples
     from .commands.SamplePaletteCommand import SamplePaletteSendCommand, SamplePaletteShowCommand
 
     # Various Application event samples
-    from .commands.SampleCustomEvent import SampleCustomEvent
-    from .commands.SampleDocumentEvents import SampleDocumentEvent1, SampleDocumentEvent2
-    from .commands.SampleWorkspaceEvents import SampleWorkspaceEvent
-    from .commands.SampleWebRequestEvent import SampleWebRequestOpened
-    from .commands.SampleCommandEvents import SampleCommandEvent
-    from .commands.SampleActiveSelectionEvents import SampleActiveSelectionEvent
+    from .commands.QTEventThread import QTEventThread
+    # from .commands.SampleDocumentEvents import SampleDocumentEvent1, SampleDocumentEvent2
+    # from .commands.SampleWorkspaceEvents import SampleWorkspaceEvent
+    # from .commands.SampleWebRequestEvent import SampleWebRequestOpened
+    # from .commands.SampleCommandEvents import SampleCommandEvent
+    # from .commands.SampleActiveSelectionEvents import SampleActiveSelectionEvent
 
     # Create our addin definition object
     my_addin = apper.FusionApp(config.app_name, config.company_name, False)
     my_addin.root_path = config.app_path
 
     # Creates a basic Hello World message box on execute
+    # my_addin.add_command(
+    #     'Launch QT App',
+    #     LaunchQTAppCommand,
+    #     {
+    #         'cmd_description': 'Hello World!',
+    #         'cmd_id': 'sample_cmd_1',
+    #         'workspace': 'FusionSolidEnvironment',
+    #         'toolbar_panel_id': 'Commands',
+    #         'cmd_resources': 'command_icons',
+    #         'command_visible': True,
+    #         'command_promoted': True,
+    #     }
+    # )
+
     my_addin.add_command(
-        'Sample Command 1',
-        SampleCommand1,
+        'Start Receiver Thread',
+        LaunchReceiverCommand,
         {
             'cmd_description': 'Hello World!',
-            'cmd_id': 'sample_cmd_1',
+            'cmd_id': 'sample_cmd_3',
             'workspace': 'FusionSolidEnvironment',
             'toolbar_panel_id': 'Commands',
             'cmd_resources': 'command_icons',
@@ -42,21 +56,7 @@ try:
         }
     )
 
-    # General command showing inputs and user interaction
-    my_addin.add_command(
-        'Sample Command 2',
-        SampleCommand2,
-        {
-            'cmd_description': 'A simple example of a Fusion 360 Command with various inputs',
-            'cmd_id': 'sample_cmd_2',
-            'workspace': 'FusionSolidEnvironment',
-            'toolbar_panel_id': 'Commands',
-            'cmd_resources': 'command_icons',
-            'command_visible': True,
-            'command_promoted': False,
-        }
-    )
-
+    # TODO Show same with javascript
     # Create an html palette to as an alternative UI
     my_addin.add_command(
         'Sample Palette Command - Show',
@@ -101,7 +101,7 @@ try:
     ui = app.userInterface
 
     # Uncomment as necessary.  Running all at once can be overwhelming :)
-    # my_addin.add_custom_event("FusionQTer_message_system", SampleCustomEvent)
+    my_addin.add_custom_event("FusionQTer_message_system", QTEventThread, False)
     # my_addin.add_document_event("FusionQTer_open_event", app.documentActivated, SampleDocumentEvent1)
     # my_addin.add_document_event("FusionQTer_close_event", app.documentClosed, SampleDocumentEvent2)
     # my_addin.add_workspace_event("FusionQTer_workspace_event", ui.workspaceActivated, SampleWorkspaceEvent)
