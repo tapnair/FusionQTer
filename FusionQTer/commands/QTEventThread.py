@@ -1,5 +1,11 @@
-import json
-import time
+"""
+QTEventThread.py
+================
+Python module for creating a thread to listen for events
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+:copyright: (c) 2021 by Patrick Rainsberry.
+:license: MIT, see LICENSE for more details.
+"""
 
 from ..apper import apper
 from multiprocessing.connection import Client

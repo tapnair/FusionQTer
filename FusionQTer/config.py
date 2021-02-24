@@ -3,3 +3,5 @@ app_path = dirname(abspath(__file__))
 
 app_name = 'FusionQTer'
 company_name = "Autodesk"
+
+auto_start_thread = True

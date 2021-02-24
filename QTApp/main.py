@@ -1,5 +1,13 @@
+"""
+main.py
+=======
+Standalone QT App for communicating with a Fusion 360 Add-in
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+:copyright: (c) 2021 by Patrick Rainsberry.
+:license: MIT, see LICENSE for more details.
+"""
+
 import sys
-import random
 from PySide6.QtWidgets import (QApplication, QLabel, QPushButton,
                                QVBoxLayout, QWidget, QLineEdit, QTextEdit)
 from PySide6.QtCore import Slot, Qt
