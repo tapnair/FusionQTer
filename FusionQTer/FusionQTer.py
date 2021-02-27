@@ -56,6 +56,7 @@ try:
     # A Custom Event that responds to the listener in the thread
     my_addin.add_custom_event("FusionQTer_message_system", QTEventThread, config.auto_start_thread)
 
+
 #  *******************Ignore below this line**************************
 except:
     app = adsk.core.Application.get()
@@ -73,4 +74,3 @@ def run(context):
 
 def stop(context):
     my_addin.stop_app()
-
