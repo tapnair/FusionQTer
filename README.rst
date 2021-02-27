@@ -31,8 +31,9 @@ Execute the following commands in the root directory of this repo:
 
     % cd QTApp
     % python3 -m venv venv/
-    % pip3 install -r requirements.txt
     % source venv/bin/activate
+    % pip3 install -r requirements.txt
+
 
 Step 3: Launch the add-in in Fusion 360
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
