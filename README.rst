@@ -63,6 +63,7 @@ This is actually the directory of the Fusion 360 add-in
 Usage
 -----
 **Note: It is important to do it in this order!**
+
 Step 1
 ^^^^^^
 Run the python file ``QTApp/main.py`` in a virtual environment.
