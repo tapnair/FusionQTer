@@ -17,9 +17,9 @@ Navigate to your desired location in a terminal, clone the repo and update the a
 
 .. code-block:: bash
 
-    % cd /Users/MY_USER_NAME/Library/Application\ Support/Autodesk/Autodesk\ Fusion\ 360/API/AddIns
-    % git clone https://github.com/tapnair/FusionQTer.git
-    % git submodule update --remote
+    cd /Users/MY_USER_NAME/Library/Application\ Support/Autodesk/Autodesk\ Fusion\ 360/API/AddIns
+    git clone https://github.com/tapnair/FusionQTer.git
+    git submodule update --remote
 
 Step 2: Create a virtual environment
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -29,10 +29,10 @@ Execute the following commands in the root directory of this repo:
 
 .. code-block:: bash
 
-    % cd QTApp
-    % python3 -m venv venv/
-    % source venv/bin/activate
-    % pip3 install -r requirements.txt
+    cd QTApp
+    python3 -m venv venv/
+    source venv/bin/activate
+    pip3 install -r requirements.txt
 
 
 Step 3: Launch the add-in in Fusion 360
@@ -74,7 +74,7 @@ Assuming you are in a terminal in the ``QTApp`` Directory:
 
 .. code-block:: bash
 
-    % python3 ./main.py
+    python3 ./main.py
 
 You can also use your IDE (VS Code, PyCharm, etc.) to create a run configuration for this.
 
