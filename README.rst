@@ -22,8 +22,7 @@ Navigate to your desired location in a terminal, clone the repo and update the a
     cd FusionQTer/FusionQTer/apper/
     git submodule init
     git submodule update
-    cd ..
-    cd ..
+    cd ../..
     pwd  
     
 Should see something like:
