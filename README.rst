@@ -87,7 +87,7 @@ You can also use your IDE (VS Code, PyCharm, etc.) to create a run configuration
 
 Step 2
 ^^^^^^
-Start the addin from within Fusion 360.
+Start the addin from within Fusion 360 (if it is not already started).
 
 If you close the QT APP or make changes and restart it you need to restart
 the connection thread in Fusion 360.
