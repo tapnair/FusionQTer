@@ -17,10 +17,17 @@ Navigate to your desired location in a terminal, clone the repo and update the a
 
 .. code-block:: bash
 
-    cd /Users/MY_USER_NAME/Library/Application\ Support/Autodesk/Autodesk\ Fusion\ 360/API/AddIns
+    cd ~/Library/Application\ Support/Autodesk/Autodesk\ Fusion\ 360/API/AddIns
     git clone https://github.com/tapnair/FusionQTer.git
-    cd FusionQTer/
-    git submodule update --remote
+    cd FusionQTer/FusionQTer/apper/
+    git submodule init
+    git submodule update
+    cd ..
+    cd ..
+    pwd  
+    
+Should see something like:
+``/Users/tapnair/Library/Application Support/Autodesk/Autodesk Fusion 360/API/AddIns/FusionQTer``
 
 Step 2: Create a virtual environment
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
