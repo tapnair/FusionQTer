@@ -15,6 +15,7 @@ try:
     from .apper import apper
 
     from .commands.LaunchQTAppCommand import RestartReceiverCommand, LaunchReceiverCommand
+    from .commands.SendToQTAppCommand import SendToQTAppCommand
     from .commands.QTEventThread import QTEventThread
 
     # Create our addin definition object
@@ -51,10 +52,24 @@ try:
         }
     )
 
+    my_addin.add_command(
+        'Send Mass to QT App',
+        SendToQTAppCommand,
+        {
+            'cmd_description': 'Send Mass Props to QT App',
+            'cmd_id': 'Sen  dToQTApp',
+            'workspace': 'FusionSolidEnvironment',
+            'toolbar_panel_id': 'Commands',
+            'cmd_resources': 'command_icons',
+            'command_visible': True,
+            'command_promoted': True,
+        }
+    )
+
     # The following sets up the communication to the other app and creates:
     # A new thread that starts a Client listening for events on the designated port (6000)
     # A Custom Event that responds to the listener in the thread
-    my_addin.add_custom_event("FusionQTer_message_system", QTEventThread, config.auto_start_thread)
+    my_addin.add_custom_event(config.event_id, QTEventThread, config.auto_start_thread)
 
 
 #  *******************Ignore below this line**************************

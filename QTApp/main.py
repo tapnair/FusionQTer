@@ -11,6 +11,7 @@ import sys
 from PySide6.QtWidgets import (QApplication, QLabel, QPushButton,
                                QVBoxLayout, QWidget, QLineEdit, QTextEdit)
 from PySide6.QtCore import Slot, Qt
+from multiprocessing.connection import Listener
 
 
 class MyWidget(QWidget):
@@ -37,21 +38,15 @@ class MyWidget(QWidget):
 
         self.conn = None
 
-
     @Slot()
     def magic(self):
-        test = self.textbox.toPlainText()
-        print(test)
-        self.text.setText(test)
-        from multiprocessing.connection import Listener
-        from array import array
-
-        # address = ('localhost', 6000)  # family is deduced to be 'AF_INET'
-        #
-        # with Listener(address, authkey=b'secret password') as listener:
-        #     with listener.accept() as conn:
-        # print('connection accepted from', listener.last_accepted)
-        conn.send([test, False])
+        plain_text = self.textbox.toPlainText()
+        self.conn.send(
+            {
+                'type': 'TEXT',
+                'object': plain_text
+            }
+        )
 
 
 if __name__ == "__main__":
@@ -61,15 +56,10 @@ if __name__ == "__main__":
     widget.resize(800, 600)
     widget.show()
 
-    from multiprocessing.connection import Listener
-    from array import array
-
     address = ('localhost', 6000)  # family is deduced to be 'AF_INET'
 
     with Listener(address, authkey=b'secret password') as listener:
         with listener.accept() as conn:
-            # print('connection accepted from', listener.last_accepted)
-            # conn.send(["first one", True])
             widget.conn = conn
             sys.exit(app.exec_())
 
