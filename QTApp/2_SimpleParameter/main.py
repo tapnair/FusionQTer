@@ -1,5 +1,5 @@
 import sys
-from multiprocessing.connection import Listener, wait, Connection
+from multiprocessing.connection import Listener, Connection
 
 from PySide6.QtCore import Slot
 from PySide6.QtWidgets import QApplication, QMainWindow
@@ -17,16 +17,15 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def on_button_clicked(self):
-        print(
-            f'{self.ui.p1_name.text()}, {self.ui.p1_value.text()}, '
-            f'{self.ui.p2_name.text()}, {self.ui.p2_value.text()}'
-        )
         output = {
-            'type': 'PARAMETERS',
-            'object': {
-                self.ui.p1_name.text(): self.ui.p1_value.text(),
-                self.ui.p2_name.text(): self.ui.p2_value.text()
-            }
+            'type': 'CHANGE_PARAMETERS',
+            'parameters': [{
+                'name': self.ui.p1_name.text(),
+                'value': self.ui.p1_value.text()
+            }, {
+                'name': self.ui.p2_name.text(),
+                'value': self.ui.p2_value.text()
+            }]
         }
         self.conn.send(output)
 
@@ -34,8 +33,10 @@ class MainWindow(QMainWindow):
     def on_refresh_clicked(self):
         if self.conn.poll():
             msg = self.conn.recv()
-            print(str(msg))
-            self.ui.mass_display.display(msg['mass'])
+            if msg['type'] == 'MASS':
+                mass_value = msg.get('mass', 0.0)
+
+                self.ui.mass_display.display(mass_value)
 
 
 if __name__ == "__main__":

@@ -18,7 +18,4 @@ class SendToQTAppCommand(apper.Fusion360CommandBase):
     def on_execute(self, command: adsk.core.Command, inputs: adsk.core.CommandInputs, args, input_values):
 
         # Get Mass properties for active design
-        msg = utils.get_mass_message()
-
-        # Send updated mass to Listener
-        config.conn.send(msg)
+        utils.send_mass_message()

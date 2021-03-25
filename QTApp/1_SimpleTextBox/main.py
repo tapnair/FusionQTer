@@ -8,20 +8,19 @@ Standalone QT App for communicating with a Fusion 360 Add-in
 """
 
 import sys
-from PySide6.QtWidgets import (QApplication, QLabel, QPushButton,
-                               QVBoxLayout, QWidget, QLineEdit, QTextEdit)
-from PySide6.QtCore import Slot, Qt
 from multiprocessing.connection import Listener
+
+from PySide6.QtCore import Slot, Qt
+from PySide6.QtWidgets import (QApplication, QLabel, QPushButton,
+                               QVBoxLayout, QWidget, QTextEdit)
 
 
 class MyWidget(QWidget):
     def __init__(self):
         QWidget.__init__(self)
-        self.hello = ["Hallo Welt", "你好，世界", "Hei maailma",
-                      "Hola Mundo", "Привет мир"]
 
-        self.button = QPushButton("Click me!")
-        self.text = QLabel("Hello World")
+        self.button = QPushButton("Send Message to Fusion 360")
+        self.text = QLabel("Fusion 360 Messaging Demo 1")
         self.text.setAlignment(Qt.AlignCenter)
 
         self.textbox = QTextEdit()
@@ -34,26 +33,24 @@ class MyWidget(QWidget):
         self.setLayout(self.layout)
 
         # Connecting the signal
-        self.button.clicked.connect(self.magic)
+        self.button.clicked.connect(self.send_msg)
 
         self.conn = None
 
     @Slot()
-    def magic(self):
+    def send_msg(self):
         plain_text = self.textbox.toPlainText()
-        self.conn.send(
-            {
-                'type': 'TEXT',
-                'object': plain_text
-            }
-        )
+        self.conn.send({
+            'type': 'TEXT',
+            'text': plain_text
+        })
 
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     widget = MyWidget()
-    widget.resize(800, 600)
+    widget.resize(300, 200)
     widget.show()
 
     address = ('localhost', 6000)  # family is deduced to be 'AF_INET'
@@ -62,5 +59,3 @@ if __name__ == "__main__":
         with listener.accept() as conn:
             widget.conn = conn
             sys.exit(app.exec_())
-
-

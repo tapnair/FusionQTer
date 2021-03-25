@@ -12,56 +12,44 @@ from .. import config
 from . import utils
 
 
-def change_parameters(new_parameters: dict):
-    ao = apper.AppObjects()
-
-    for new_parameter in new_parameters:
-        current_parameter = ao.design.userParameters.itemByName(new_parameter['name'])
-        if current_parameter is not None:
-            new_value = float(new_parameter['value'])
-            if current_parameter.value != new_value:
-                current_parameter.value = new_value
-
-    msg = utils.get_mass_message()
-    config.conn.send(msg)
-
-
-def get_parameters():
-    all_parameters = []
-    ao = apper.AppObjects()
-    parameters = ao.design.userParameters
-
-    for parameter in parameters:
-        all_parameters.append(
-            {
-                'name': parameter.name,
-                'value': parameter.value
-            }
-        )
-    config.conn.send(all_parameters)
-
-
+# This class leverages the apper implementation of a Fusion 360 Custom Event and spawns a new thread
 class QTEventThread(apper.Fusion360CustomThread):
+
+    # This function is called everytime the self.fire_event(args) is called from the run_in_thread() function
     def custom_event_received(self, event_dict):
         ao = apper.AppObjects()
 
         msg = event_dict['msg']
-        if msg['type'] == 'TEXT':
-            ao.ui.messageBox('Message received: ' + msg['object'])
+        msg_type = msg.get('type', False)
 
-        elif msg['type'] == 'CHANGE_PARAMETERS':
-            change_parameters(msg['object'])
+        if msg_type:
+            if msg_type == 'TEXT':
+                ao.ui.messageBox(f"Message received: {msg.get('text', 'No text in message')}")
 
-        elif msg['type'] == 'GET_PARAMETERS':
-            get_parameters()
+            elif msg_type == 'CHANGE_PARAMETERS':
+                utils.change_parameters(msg.get('parameters', []))
 
+            elif msg_type == 'GET_PARAMETERS':
+                utils.send_parameters_message()
+
+            elif msg_type == 'GET_MASS':
+                utils.send_mass_message()
+
+        else:
+            ao.ui.messageBox(f'Received unknown message: {str(msg)}')
+
+    #  This function
     def run_in_thread(self, thread, event_id, input_data=None):
         address = ('localhost', 6000)
         with Client(address, authkey=b'secret password') as conn:
             config.conn = conn
-            msg = utils.get_mass_message()
-            config.conn.send(msg)
-            while not self.stop_flag.wait(5):
-                msg = conn.recv()
-                args = {'msg': msg}
-                self.fire_event(args)
+            utils.send_mass_message()
+            while not self.stop_flag.isSet():
+                try:
+                    msg = conn.recv()
+                    args = {'msg': msg}
+                    self.fire_event(args)
+
+                except EOFError:
+                    self.stop_flag.set()
+

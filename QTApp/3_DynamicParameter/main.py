@@ -26,33 +26,59 @@ class MainWindow(QMainWindow):
         self.conn: Connection
         self.conn = None
 
+    def init_ui(self):
+        self._send_receive_msg({'type': 'GET_MASS'})
+        self._send_receive_msg({'type': 'GET_PARAMETERS'})
+
+
     @Slot()
     def on_send_clicked(self):
         # Send new values of the parameters as defined in the table
-        self.conn.send({
-            'type': 'CHANGE_PARAMETERS',
-            'object': self.table_model.parameters
-        })
+        self._send_msg({'type': 'CHANGE_PARAMETERS', 'parameters': self.table_model.parameters})
+        self._send_receive_msg({'type': 'GET_MASS'})
 
     @Slot()
     def on_refresh_clicked(self):
-        # If there is a new value of mass available update the LCD display
-        # Make sure to loop through any previous values that may be on the stack
-        while self.conn.poll():
-            msg = self.conn.recv()
-            mass_value = msg.get('mass', False)
-            if mass_value:
-                self.ui.mass_display.display(mass_value)
+        # Send request for mass data
+        self._send_receive_msg({'type': 'GET_MASS'})
 
     @Slot()
     def on_get_clicked(self):
         # Send Request for parameter info
-        self.conn.send({'type': 'GET_PARAMETERS'})
+        self._send_receive_msg({'type': 'GET_PARAMETERS'})
 
-        # Wait for response and update the table model
-        self.table_model.beginResetModel()
-        self.table_model.parameters = self.conn.recv()
-        self.table_model.endResetModel()
+    def _send_msg(self, send_msg):
+        self.conn.send(send_msg)
+
+    def _send_receive_msg(self, send_msg):
+        self._flush()
+        self.conn.send(send_msg)
+        self._get_response()
+
+    def _get_response(self):
+        # Wait for response
+        msg = self.conn.recv()
+
+        # If received message is appropriate
+        msg_type = msg.get('type', False)
+        if msg_type:
+
+            if msg.get('type', False) == 'PARAMETERS':
+                new_parameters = msg.get('parameters', default_data)
+
+                # Update the table model
+                self.table_model.beginResetModel()
+                self.table_model.parameters = new_parameters
+                self.table_model.endResetModel()
+
+            elif msg_type == 'MASS':
+                mass_value = msg.get('mass', 0.0)
+
+                self.ui.mass_display.display(mass_value)
+
+    def _flush(self):
+        while self.conn.poll():
+            self.conn.recv()
 
 
 class TableModel(QtCore.QAbstractTableModel):
@@ -127,4 +153,5 @@ if __name__ == "__main__":
     with Listener(address, authkey=b'secret password') as listener:
         with listener.accept() as conn:
             window.conn = conn
+            window.init_ui()
             sys.exit(app.exec_())
