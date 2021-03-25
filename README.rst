@@ -118,7 +118,7 @@ Run one of the ``main.py`` files from one of the QTApp sample directories in the
 
 *See above for how to create the virtual environment.*
 
-Assuming you are in a terminal in the ``QTApp\1_SimpleTextBox`` Directory:
+Assuming you are in a terminal in the ``QTApp/1_SimpleTextBox`` Directory:
 
 .. code-block:: bash
 
