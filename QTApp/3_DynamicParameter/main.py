@@ -1,6 +1,5 @@
 import sys
 from multiprocessing.connection import Listener, Connection
-
 from PySide6 import QtCore
 from PySide6.QtCore import Slot
 from PySide6.QtWidgets import QApplication, QMainWindow
@@ -30,7 +29,6 @@ class MainWindow(QMainWindow):
         self._send_receive_msg({'type': 'GET_MASS'})
         self._send_receive_msg({'type': 'GET_PARAMETERS'})
 
-
     @Slot()
     def on_send_clicked(self):
         # Send new values of the parameters as defined in the table
@@ -56,13 +54,14 @@ class MainWindow(QMainWindow):
         self._get_response()
 
     def _get_response(self):
-        # Wait for response
+        # Blocks while waiting for a response
         msg = self.conn.recv()
 
         # If received message is appropriate
         msg_type = msg.get('type', False)
         if msg_type:
 
+            #  Update the parameter table
             if msg.get('type', False) == 'PARAMETERS':
                 new_parameters = msg.get('parameters', default_data)
 
@@ -71,16 +70,19 @@ class MainWindow(QMainWindow):
                 self.table_model.parameters = new_parameters
                 self.table_model.endResetModel()
 
+            # Update the Mass "LCD" display
             elif msg_type == 'MASS':
                 mass_value = msg.get('mass', 0.0)
-
                 self.ui.mass_display.display(mass_value)
 
+    # Clear out any extraneous messages in the queue
     def _flush(self):
         while self.conn.poll():
             self.conn.recv()
 
 
+# QT Table data model class
+# Mostly taken from QT Address Book Sample documentation
 class TableModel(QtCore.QAbstractTableModel):
     def __init__(self, data):
         super(TableModel, self).__init__()
@@ -110,7 +112,6 @@ class TableModel(QtCore.QAbstractTableModel):
     def headerData(self, section, orientation, role=QtCore.Qt.DisplayRole):
         if role != QtCore.Qt.DisplayRole:
             return None
-
         if orientation == QtCore.Qt.Horizontal:
             if section == 0:
                 return "Name"

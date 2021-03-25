@@ -1,6 +1,5 @@
 import sys
 from multiprocessing.connection import Listener, Connection
-
 from PySide6.QtCore import Slot
 from PySide6.QtWidgets import QApplication, QMainWindow
 
@@ -17,6 +16,8 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def on_button_clicked(self):
+        # Build the message with the name and value to send to Fusion 360
+        # If there is a parameter with the name it will be updated to the value
         output = {
             'type': 'CHANGE_PARAMETERS',
             'parameters': [{
@@ -27,31 +28,27 @@ class MainWindow(QMainWindow):
                 'value': self.ui.p2_value.text()
             }]
         }
+
+        # Send the message to Fusion 360
         self.conn.send(output)
 
     @Slot()
     def on_refresh_clicked(self):
+        # You must manually click the "Send Mass to QT" button in the Fusion 360 add-in
         if self.conn.poll():
             msg = self.conn.recv()
             if msg['type'] == 'MASS':
                 mass_value = msg.get('mass', 0.0)
-
                 self.ui.mass_display.display(mass_value)
 
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-
     window = MainWindow()
     window.show()
 
-    # sys.exit(app.exec_())
-
     address = ('localhost', 6000)  # family is deduced to be 'AF_INET'
-
     with Listener(address, authkey=b'secret password') as listener:
         with listener.accept() as conn:
-            # print('connection accepted from', listener.last_accepted)
-            # conn.send(["first one", True])
             window.conn = conn
             sys.exit(app.exec_())
