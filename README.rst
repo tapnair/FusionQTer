@@ -2,6 +2,8 @@ FusionQTer
 ==========
 Demo app showing communication between a standalone QT Application and a Fusion 360 Add-in.
 
+.. image:: resources/dynamic_properties_dialog.png
+
 .. image:: resources/FusionQTer_main.png
 
 Overview
